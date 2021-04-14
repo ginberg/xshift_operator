@@ -56,7 +56,7 @@
   {
     "kind": "BooleanProperty",
     "name": "rescale_separately",
-    "defaultValue": FALSE,
+    "defaultValue": false,
     "description": "rescaling each file separately may help equalizing the variance between runs."
   }
   ]

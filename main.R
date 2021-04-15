@@ -70,7 +70,10 @@ library(flowCore)
 #   ctx$save()
 
 # TODO create input
+fcs_filename <- "BM2_cct_normalized_01_non-Neutrophils.fcs"
 
 system("java -Xmx32G -cp VorteX.jar -Djava.awt.headless=true standalone.Xshift")
 
 # TODO read output and write to tercen
+flow_frame <- read.FCS(file.path("out", fcs_filename))
+str(flow_frame)

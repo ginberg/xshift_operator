@@ -2,7 +2,7 @@
   "name": "Xshift",
   "description": "Xshift",
   "tags": ["clustering", "vortex"],
-  "authors": ["ginberg"],
+  "authors": ["tercen"],
   "urls": ["https://github.com/ginberg/xshift_operator"],
   "properties": [
   {

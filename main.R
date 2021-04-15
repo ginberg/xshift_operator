@@ -18,7 +18,7 @@ fcs_to_data = function(filename) {
     mutate(filename = rep_len(basename(filename), nrow(.)))
 }
  
-ctx = tercenCtx()
+#ctx = tercenCtx()
 
 # TODO create fcs file
 fcs_filename <- "BM2_cct_normalized_01_non-Neutrophils.fcs"
@@ -42,5 +42,6 @@ system("java -Xmx32G -cp VorteX.jar -Djava.awt.headless=true standalone.Xshift")
 # read output and write to tercen
 read.FCS(file.path("out", fcs_filename)) %>%
   bind_rows() %>%
-  ctx$addNamespace() %>%
-  ctx$save()
+  print()
+  #ctx$addNamespace() %>%
+  #ctx$save()

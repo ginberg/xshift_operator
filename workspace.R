@@ -27,52 +27,27 @@ fcs_to_data = function(filename) {
 
 ctx = tercenCtx()
 
-if (!any(ctx$cnames == "documentId")) stop("Column factor documentId is required") 
+# TODO create fcs file
+fcs_filename <- "BM2_cct_normalized_01_non-Neutrophils.fcs"
+# write.FCS()
+# create fcsFileList.txt
+write.table(fcs_filename, file = "fcsFileList.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
+# create importConfig.txt
+write.properties(file = file("importConfig.txt"),
+                 properties = list(clustering_columns         = "4,5,6,7,8,9,10", 
+                                   limit_events_per_file      = "100", 
+                                   transformation             = "ASINH",
+                                   scaling_factor             = "5",
+                                   noise_threshold            = "1.0",
+                                   euclidian_length_threshold = "0.0",
+                                   rescale                    = "NONE",
+                                   quantile                   = "0.95",
+                                   rescale_separately         = "false"))
 
-#1. extract files
-df <- ctx$cselect()
+system("java -Xmx32G -cp VorteX.jar -Djava.awt.headless=true standalone.Xshift")
 
-docId = df$documentId[1]
-doc = ctx$client$fileService$get(docId)
-filename = tempfile()
-writeBin(ctx$client$fileService$download(docId), filename)
-on.exit(unlink(filename))
-
-# unzip if archive
-if(length(grep(".zip", doc$name)) > 0) {
-  tmpdir <- tempfile()
-  unzip(filename, exdir = tmpdir)
-  f.names <- list.files(tmpdir, full.names = TRUE)
-} else {
-  f.names <- filename
-}
-
-# check FCS
-if(any(!isFCSfile(f.names))) stop("Not all imported files are FCS files.")
-
-assign("actual", 0, envir = .GlobalEnv)
-task = ctx$task
-
-
-#2. convert them to FCS files
-f.names %>%
-  lapply(function(filename){
-    data = fcs_to_data(filename)
-    if (!is.null(task)) {
-      # task is null when run from RStudio
-      actual = get("actual",  envir = .GlobalEnv) + 1
-      assign("actual", actual, envir = .GlobalEnv)
-      evt = TaskProgressEvent$new()
-      evt$taskId = task$id
-      evt$total = length(f.names)
-      evt$actual = actual
-      evt$message = paste0('processing FCS file ' , filename)
-      ctx$client$eventService$sendChannel(task$channelId, evt)
-    } else {
-      cat('processing FCS file ' , filename)
-    }
-    data
-  }) %>%
+# read output and write to tercen
+read.FCS(file.path("out", fcs_filename)) %>%
   bind_rows() %>%
   ctx$addNamespace() %>%
   ctx$save()

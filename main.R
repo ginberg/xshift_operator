@@ -2,6 +2,7 @@ library(BiocManager)
 library(tercen)
 library(dplyr)
 library(flowCore)
+library(properties)
 
 fcs_to_data = function(filename) {
   data_fcs = read.FCS(filename, transformation = FALSE)

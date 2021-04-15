@@ -2,6 +2,7 @@ library(BiocManager)
 library(tercen)
 library(dplyr)
 library(flowCore)
+library(properties)
 
 # http://127.0.0.1:5402/admin/w/4133245f38c1411c543ef25ea3020c41/ds/f3a1ea03-d4e3-4678-8a7b-f1fffc50cab8
 # Set appropriate options

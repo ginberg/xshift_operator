@@ -31,7 +31,7 @@ write.FCS(frame, fcs_filename)
 # create fcsFileList.txt
 write.table(fcs_filename, file = "fcsFileList.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
 # create importConfig.txt
-limit_events_per_file = ifelse(is.null(ctx$op.value('limit_events_per_file')), 1000, as.numeric(ctx$op.value('limit_events_per_file')))
+limit_events_per_file = ifelse(is.null(ctx$op.value('limit_events_per_file')), 100, as.numeric(ctx$op.value('limit_events_per_file')))
 num_nearest_neighbors = ctx$op.value('num_nearest_neighbors')
 if (is.null(num_nearest_neighbors)) {
   num_nearest_neighbors <- ""

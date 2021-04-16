@@ -18,10 +18,8 @@ fcs_to_data = function(filename) {
     mutate(filename = rep_len(basename(filename), nrow(.)))
 }
 
-print("before context")
 ctx = tercenCtx()
 
-print("before creating fcs file")
 # create fcs file
 fcs_filename  <- "input.fcs"
 clusters      <- ctx$rselect() %>% pull(gs0.variable)
@@ -30,11 +28,9 @@ colnames(res) <- clusters
 frame         <- flowCore::flowFrame(res)
 write.FCS(frame, fcs_filename)
 
-print("before creating fcsFileList")
 # create fcsFileList.txt
 write.table(fcs_filename, file = "fcsFileList.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
 
-print("before getting properties")
 limit_events_per_file = ifelse(is.null(ctx$op.value('limit_events_per_file')), 100, as.numeric(ctx$op.value('limit_events_per_file')))
 num_nearest_neighbors = ctx$op.value('num_nearest_neighbors')
 if (is.null(num_nearest_neighbors)) {
@@ -50,7 +46,6 @@ if (is.null(num_nearest_neighbors)) {
     }
 }
 
-print("before creating fcsFileList")
 # create importConfig.txt
 write.properties(file = file("importConfig.txt"),
                  properties = list(clustering_columns         = "4,5,6,7,8,9,10",
@@ -63,10 +58,8 @@ write.properties(file = file("importConfig.txt"),
                                    quantile                   = "0.95",
                                    rescale_separately         = "false"))
 
-print("before java run")
 system(paste("java -Xmx32G -cp VorteX.jar -Djava.awt.headless=true standalone.Xshift", num_nearest_neighbors))
 
-print("before read output")
 # read output and write to tercen
 fcs_to_data(file.path("out", fcs_filename)) %>%
   bind_rows() %>%

@@ -42,7 +42,7 @@ limit_events_per_file = ifelse(is.null(ctx$op.value('limit_events_per_file')), 1
 num_nearest_neighbors = ctx$op.value('num_nearest_neighbors')
 if (is.null(num_nearest_neighbors)) {
   num_nearest_neighbors <- ""
-} else {
+} else if (num_nearest_neighbors != "") {
   # if it's a string it should be auto
   if (is.na(suppressWarnings(as.numeric(num_nearest_neighbors)))) {
     if (num_nearest_neighbors != "auto") {

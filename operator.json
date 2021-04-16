@@ -6,12 +6,6 @@
   "urls": ["https://github.com/ginberg/xshift_operator"],
   "properties": [
   {
-    "kind": "StringProperty",
-    "name": "clustering_columns",
-    "defaultValue": "",
-    "description": "A comma-delimited list of channels in the FCS that will be used for clustering. Column indices are 1-based, i.e. the first column is 1, second column is 2 etc."
-  },
-  {
     "kind": "DoubleProperty",
     "name": "limit_events_per_file",
     "defaultValue": 100,
@@ -19,45 +13,9 @@
   },
   {
     "kind": "StringProperty",
-    "name": "transformation",
-    "defaultValue": "ASINH",
-    "description": "Numerical transformation is essential to ensure that the expression values on each channel are approximately normally distributed. Choice of NONE, ASINH, DOUBLE_ASINH."
-  },
-  {
-    "kind": "DoubleProperty",
-    "name": "scaling_factor",
-    "defaultValue": 5,
-    "description": "A factor by which each value gets divided before transformation. 5 is default, but could be set to 3 or lower in order to improve cluster separation on low-intensity channels."
-  },
-  {
-    "kind": "DoubleProperty",
-    "name": "noise_threshold",
-    "defaultValue": 1.0,
-    "description": "A specified noise threshold will be subtracted from every raw value and then all the negative values will be set to zero. This filters out low-lever noise and GREATLY improves clustering in many dimensions."
-  },
-  {
-    "kind": "DoubleProperty",
-    "name": "euclidian_length_threshold",
-    "defaultValue": 0.0,
-    "description": "Setting this limit above 0 excludes events that have low intensity on all channels (unstained cells)."
-  },
-  {
-    "kind": "StringProperty",
-    "name": "rescale",
-    "defaultValue": "NONE",
-    "description": "Rescaling of clustering channels may help equalizing the extent to which high- and low-expressed markers influence clustering. Choice of NONE, SD, QUANTILE."
-  },
-  {
-    "kind": "DoubleProperty",
-    "name": "quantile",
-    "defaultValue": 0.95,
-    "description": "if quantile rescaling is selected, a quantile on which the rescaling is based should be specified below."
-  },
-  {
-    "kind": "BooleanProperty",
-    "name": "rescale_separately",
-    "defaultValue": false,
-    "description": "rescaling each file separately may help equalizing the variance between runs."
+    "name": "num_nearest_neighbors",
+    "defaultValue": "",
+    "description": "Optional parameter NUM_NEAREST_NEIGHBORS is defining the resolution of density estimate and hence indirectly controls the number of clusters. If omitted, the clustering will run with the default setting of K=20. Keeping this default setting is recommended for the first pass because the runtime will be fast and the result is likely to be close to the optimal. Setiing the parameter to 'auto' instead of will lead to the algorithm running through an automatically determined range of K values and then selecting the optimal clustering via the elbow method."
   }
   ]
 }

@@ -18,17 +18,37 @@ fcs_to_data = function(filename) {
     mutate(filename = rep_len(basename(filename), nrow(.)))
 }
  
-#ctx = tercenCtx()
+ctx = tercenCtx()
 
-# TODO create fcs file
-fcs_filename <- "BM2_cct_normalized_01_non-Neutrophils.fcs"
-# write.FCS()
+# create fcs file
+fcs_filename  <- "input.fcs"
+clusters      <- ctx$rselect() %>% pull(gs0.variable)
+res           <- t(ctx$as.matrix())
+colnames(res) <- clusters
+frame         <- flowCore::flowFrame(res)
+write.FCS(frame, fcs_filename)
+
 # create fcsFileList.txt
 write.table(fcs_filename, file = "fcsFileList.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
 # create importConfig.txt
+limit_events_per_file = ifelse(is.null(ctx$op.value('limit_events_per_file')), 1000, as.numeric(ctx$op.value('limit_events_per_file')))
+num_nearest_neighbors = ctx$op.value('num_nearest_neighbors')
+if (is.null(num_nearest_neighbors)) {
+  num_nearest_neighbors <- ""
+} else {
+    # if it's a string it should be auto
+    if (is.na(suppressWarnings(as.numeric(num_nearest_neighbors)))) {
+      if (num_nearest_neighbors != "auto") {
+        stop("num_nearest_neighbors should be empty, a numeric value or equal to 'auto'.")
+      }
+    } else {
+      num_nearest_neighbors <- as.numeric(num_nearest_neighbors)
+    }
+}
+
 write.properties(file = file("importConfig.txt"),
-                 properties = list(clustering_columns         = "4,5,6,7,8,9,10", 
-                                   limit_events_per_file      = "100", 
+                 properties = list(clustering_columns         = "4,5,6,7,8,9,10",
+                                   limit_events_per_file      = as.character(limit_events_per_file),
                                    transformation             = "ASINH",
                                    scaling_factor             = "5",
                                    noise_threshold            = "1.0",
@@ -37,11 +57,10 @@ write.properties(file = file("importConfig.txt"),
                                    quantile                   = "0.95",
                                    rescale_separately         = "false"))
 
-system("java -Xmx32G -cp VorteX.jar -Djava.awt.headless=true standalone.Xshift")
+system(paste("java -Xmx32G -cp VorteX.jar -Djava.awt.headless=true standalone.Xshift", num_nearest_neighbors))
 
 # read output and write to tercen
-read.FCS(file.path("out", fcs_filename)) %>%
+fcs_to_data(file.path("out", fcs_filename)) %>%
   bind_rows() %>%
-  print()
-  #ctx$addNamespace() %>%
-  #ctx$save()
+  ctx$addNamespace() %>%
+  ctx$save()

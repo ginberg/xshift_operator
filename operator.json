@@ -1,7 +1,21 @@
 {
-  "name": "Xshift",
-  "description": "Xshift",
-  "tags": ["clustering"],
+  "name": "XSHIFT",
+  "description": "Single-cell analysis, clustering and visualization.",
+  "tags": ["xshift clustering"],
   "authors": ["tercen"],
-  "urls": ["https://github.com/ginberg/xshift_operator"]
+  "urls": ["https://github.com/ginberg/xshift_operator"],
+  "properties": [
+  {
+    "kind": "DoubleProperty",
+    "name": "limit_events_per_file",
+    "defaultValue": 100,
+    "description": "if the limit is different from 0, a specified amount of events get imported from the beginning of the file. This limits the total size of the dataset, which generally shall not exceed 1M cells."
+  },
+  {
+    "kind": "StringProperty",
+    "name": "num_nearest_neighbors",
+    "defaultValue": "",
+    "description": "Optional parameter NUM_NEAREST_NEIGHBORS is defining the resolution of density estimate and hence indirectly controls the number of clusters. If omitted, the clustering will run with the default setting of K=20. Keeping this default setting is recommended for the first pass because the runtime will be fast and the result is likely to be close to the optimal. Setiing the parameter to 'auto' instead of will lead to the algorithm running through an automatically determined range of K values and then selecting the optimal clustering via the elbow method."
+  }
+  ]
 }

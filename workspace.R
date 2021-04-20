@@ -11,6 +11,9 @@ library(properties)
 # options("tercen.username"= "admin")
 # options("tercen.password"= "admin")
 
+# force disabling scientific notation
+options(scipen = 999)
+
 fcs_to_data = function(filename) {
   data_fcs = read.FCS(filename, transformation = FALSE)
   names_parameters = data_fcs@parameters@data$desc

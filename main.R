@@ -4,6 +4,9 @@ library(dplyr)
 library(flowCore)
 library(properties)
 
+# force disabling scientific notation
+options(scipen = 999)
+
 fcs_to_data = function(filename) {
   data_fcs = read.FCS(filename, transformation = FALSE)
   names_parameters = data_fcs@parameters@data$desc
